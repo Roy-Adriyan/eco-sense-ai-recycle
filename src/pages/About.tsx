@@ -234,12 +234,6 @@ const About = () => {
               bio: "Pioneering responsible AI development with a focus on ethical machine learning practices."
             },
             {
-              name: "Dr. Kai Zhang",
-              role: "IoT Systems Architect",
-              image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7",
-              bio: "Expert in developing scalable IoT ecosystems for sustainable technology solutions."
-            },
-            {
               name: "Adriyan Roy",
               role: "CSE AIML Student",
               image: "/lovable-uploads/0c52af70-b27a-42ee-a06d-bd350a372e60.png",
