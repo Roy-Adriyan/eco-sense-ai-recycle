@@ -240,9 +240,9 @@ const About = () => {
               bio: "Expert in developing scalable IoT ecosystems for sustainable technology solutions."
             },
             {
-              name: "Amara Okonkwo",
-              role: "Environmental Data Scientist",
-              image: "https://images.unsplash.com/photo-1581226905085-381f45eaa5a5",
+              name: "Adriyan Roy",
+              role: "CSE AIML Student",
+              image: "/lovable-uploads/0c52af70-b27a-42ee-a06d-bd350a372e60.png",
               bio: "Specializing in data-driven approaches to environmental sustainability and circular economy."
             }
           ].map((person, index) => (
