@@ -225,7 +225,7 @@ const About = () => {
           title="Our Expert Team"
           subtitle="Passionate professionals dedicated to revolutionizing e-waste management"
         />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 justify-center">
           {[
             {
               name: "Elena Rodriguez",
@@ -240,16 +240,18 @@ const About = () => {
               bio: "Specializing in data-driven approaches to environmental sustainability and circular economy."
             }
           ].map((person, index) => (
-            <div key={index} className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-              <div className="text-center">
-                <img 
-                  src={person.image} 
-                  alt={person.name} 
-                  className="w-32 h-32 object-cover rounded-full mx-auto mb-4"
-                />
-                <h3 className="text-xl font-semibold">{person.name}</h3>
-                <p className="text-eco-600 font-medium mb-3">{person.role}</p>
-                <p className="text-gray-600">{person.bio}</p>
+            <div key={index} className="flex justify-center">
+              <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200 max-w-md w-full">
+                <div className="text-center">
+                  <img 
+                    src={person.image} 
+                    alt={person.name} 
+                    className="w-32 h-32 object-cover rounded-full mx-auto mb-4"
+                  />
+                  <h3 className="text-xl font-semibold">{person.name}</h3>
+                  <p className="text-eco-600 font-medium mb-3">{person.role}</p>
+                  <p className="text-gray-600">{person.bio}</p>
+                </div>
               </div>
             </div>
           ))}
