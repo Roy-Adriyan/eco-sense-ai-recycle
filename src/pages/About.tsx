@@ -1,4 +1,3 @@
-
 import Layout from "@/components/Layout";
 import SectionContainer from "@/components/SectionContainer";
 import SectionHeader from "@/components/SectionHeader";
@@ -229,22 +228,22 @@ const About = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
           {[
             {
-              name: "Dr. Sarah Chen",
-              role: "AI Research Lead",
-              image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80",
-              bio: "Expert in machine learning with a focus on computer vision and classification algorithms."
+              name: "Elena Rodriguez",
+              role: "AI Ethics Lead",
+              image: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952",
+              bio: "Pioneering responsible AI development with a focus on ethical machine learning practices."
             },
             {
-              name: "Michael Rodriguez",
+              name: "Dr. Kai Zhang",
               role: "IoT Systems Architect",
-              image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80",
-              bio: "Specializes in designing integrated IoT ecosystems for environmental applications."
+              image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7",
+              bio: "Expert in developing scalable IoT ecosystems for sustainable technology solutions."
             },
             {
-              name: "Dr. Aisha Patel",
-              role: "Environmental Scientist",
-              image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80",
-              bio: "Expert in sustainability metrics and lifecycle assessment methodologies."
+              name: "Amara Okonkwo",
+              role: "Environmental Data Scientist",
+              image: "https://images.unsplash.com/photo-1581226905085-381f45eaa5a5",
+              bio: "Specializing in data-driven approaches to environmental sustainability and circular economy."
             }
           ].map((person, index) => (
             <div key={index} className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
