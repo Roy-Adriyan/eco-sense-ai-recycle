@@ -1,12 +1,12 @@
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Layout from "@/components/Layout";
 import SectionContainer from "@/components/SectionContainer";
 import SectionHeader from "@/components/SectionHeader";
-import ImageUploader from "@/components/ImageUploader";
 import AIResultsCard from "@/components/AIResultsCard";
 import useDocumentTitle from "@/utils/useDocumentTitle";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
 import { 
   Camera, 
   Upload, 
@@ -16,13 +16,19 @@ import {
   Info
 } from "lucide-react";
 
-// Mock data for demo purposes
-const mockCategories = [
-  { name: "Circuit Board", probability: 0.87, recyclable: true },
-  { name: "Battery", probability: 0.09, recyclable: false },
-  { name: "Display Panel", probability: 0.03, recyclable: true },
-  { name: "Plastic Casing", probability: 0.01, recyclable: true }
-];
+// Recycling guidelines for common e-waste components
+const recyclingGuidelines = {
+  "circuit board": { recyclable: true },
+  "battery": { recyclable: false },
+  "display panel": { recyclable: true },
+  "plastic casing": { recyclable: true },
+  "cable": { recyclable: true },
+  "metal": { recyclable: true },
+  "glass": { recyclable: true },
+  "computer": { recyclable: true },
+  "phone": { recyclable: true },
+  "monitor": { recyclable: true }
+};
 
 const demoExamples = [
   {
@@ -45,19 +51,68 @@ const demoExamples = [
 const Demo = () => {
   useDocumentTitle('AI Demo');
   
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [fileDataURL, setFileDataURL] = useState<string | null>(null);
+  const [previewURL, setPreviewURL] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [results, setResults] = useState<any[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const handleImageUpload = (file: File) => {
-    setFile(file);
-    setResults(null);
-    setError(null);
+  // Convert file to base64 when a file is uploaded
+  useEffect(() => {
+    if (file) {
+      // Create preview URL for display
+      setPreviewURL(URL.createObjectURL(file));
+
+      // Convert to base64 for API
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFileDataURL(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setPreviewURL(null);
+      setFileDataURL(null);
+    }
+
+    // Cleanup
+    return () => {
+      if (previewURL) URL.revokeObjectURL(previewURL);
+    };
+  }, [file]);
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const selectedFile = e.target.files[0];
+      setFile(selectedFile);
+      setResults(null);
+      setError(null);
+    }
   };
 
-  const handleAnalyze = () => {
-    if (!file) {
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      setFile(e.dataTransfer.files[0]);
+      setResults(null);
+      setError(null);
+    }
+  };
+
+  const handleBrowseClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleAnalyze = async () => {
+    if (!file || !fileDataURL) {
       setError("Please upload an image first");
       return;
     }
@@ -65,15 +120,54 @@ const Demo = () => {
     setIsAnalyzing(true);
     setError(null);
 
-    // Simulate API call with timeout
-    setTimeout(() => {
+    try {
+      // Extract base64 data from the data URL (remove the prefix like "data:image/jpeg;base64,")
+      const base64Image = fileDataURL.split(",")[1];
+      
+      const response = await axios({
+        method: "POST",
+        url: "https://serverless.roboflow.com/e-waste-dataset-r0ojc/43",
+        params: {
+          api_key: "BHeBrRmhkfOQDq0RPDaP"
+        },
+        data: base64Image,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
+      });
+
+      // Process response into a format compatible with your AIResultsCard
+      const processedResults = processApiResponse(response.data);
+      setResults(processedResults);
+    } catch (err) {
+      console.error("API Error:", err);
+      setError("Failed to analyze image. Please try again.");
+    } finally {
       setIsAnalyzing(false);
-      setResults(mockCategories);
-    }, 2000);
+    }
+  };
+
+  const processApiResponse = (data: any) => {
+    // Check if predictions exist
+    if (!data.predictions || data.predictions.length === 0) {
+      return [];
+    }
+
+    // Map the API response to the format expected by AIResultsCard
+    return data.predictions.map((prediction: any) => {
+      const className = prediction.class.toLowerCase();
+      return {
+        name: prediction.class,
+        probability: prediction.confidence,
+        recyclable: recyclingGuidelines[className]?.recyclable ?? true // Default to true if unknown
+      };
+    });
   };
 
   const handleReset = () => {
     setFile(null);
+    setFileDataURL(null);
+    setPreviewURL(null);
     setResults(null);
     setError(null);
   };
@@ -83,10 +177,15 @@ const Demo = () => {
     setResults(null);
     setError(null);
 
-    // Simulate loading an example
+    // For demo examples, we can use mock data (for demonstration purposes)
     setTimeout(() => {
+      const mockPredictions = [
+        { name: example.name, probability: 0.92, recyclable: true },
+        { name: "Electronic Component", probability: 0.65, recyclable: true },
+        { name: "Plastic", probability: 0.43, recyclable: true }
+      ];
       setIsAnalyzing(false);
-      setResults(mockCategories);
+      setResults(mockPredictions);
     }, 1500);
   };
 
@@ -116,7 +215,47 @@ const Demo = () => {
                 Upload an image of electronic waste for AI analysis. The system will identify components and provide recycling recommendations.
               </p>
 
-              <ImageUploader onImageUpload={handleImageUpload} />
+              {/* Custom Image Uploader */}
+              <div 
+                className={`border-2 border-dashed rounded-lg p-6 text-center ${file ? 'border-tech-500 bg-tech-50' : 'border-gray-300 hover:border-tech-400'}`}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+              >
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleImageUpload}
+                  className="hidden"
+                  accept="image/*"
+                />
+
+                {previewURL ? (
+                  <div className="mb-4">
+                    <img 
+                      src={previewURL} 
+                      alt="Preview" 
+                      className="max-h-64 mx-auto rounded"
+                    />
+                    <p className="text-sm text-gray-500 mt-2">{file?.name}</p>
+                  </div>
+                ) : (
+                  <div className="py-8">
+                    <div className="mx-auto mb-4 bg-tech-100 rounded-full p-3 w-16 h-16 flex items-center justify-center">
+                      <Upload className="h-8 w-8 text-tech-600" />
+                    </div>
+                    <p className="text-gray-700 mb-2">Drag and drop an image here or</p>
+                    <Button 
+                      type="button" 
+                      onClick={handleBrowseClick}
+                      variant="outline" 
+                      className="mt-2"
+                    >
+                      Browse Files
+                    </Button>
+                    <p className="text-xs text-gray-500 mt-3">Supported formats: JPG, PNG, GIF</p>
+                  </div>
+                )}
+              </div>
 
               <div className="flex justify-end gap-3 mt-6">
                 <Button 
@@ -225,7 +364,7 @@ const Demo = () => {
                 <div className="flex items-start">
                   <CircleAlert className="h-5 w-5 text-amber-500 mr-2 flex-shrink-0 mt-0.5" />
                   <p className="text-sm text-gray-600">
-                    This is a demonstration using simulated results. In a production environment, the AI would connect to trained models.
+                    This demo connects to a real Roboflow model to analyze e-waste images. Results and accuracy may vary based on image quality.
                   </p>
                 </div>
                 <div className="flex items-start">
