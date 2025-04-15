@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import Layout from "@/components/Layout";
 import SectionContainer from "@/components/SectionContainer";
@@ -16,7 +15,6 @@ import {
   Info
 } from "lucide-react";
 
-// Recycling guidelines for common e-waste components
 const recyclingGuidelines = {
   "circuit board": { recyclable: true },
   "battery": { recyclable: false },
@@ -59,13 +57,10 @@ const Demo = () => {
   const [results, setResults] = useState<any[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Convert file to base64 when a file is uploaded
   useEffect(() => {
     if (file) {
-      // Create preview URL for display
       setPreviewURL(URL.createObjectURL(file));
 
-      // Convert to base64 for API
       const reader = new FileReader();
       reader.onloadend = () => {
         setFileDataURL(reader.result as string);
@@ -76,7 +71,6 @@ const Demo = () => {
       setFileDataURL(null);
     }
 
-    // Cleanup
     return () => {
       if (previewURL) URL.revokeObjectURL(previewURL);
     };
@@ -121,7 +115,6 @@ const Demo = () => {
     setError(null);
 
     try {
-      // Extract base64 data from the data URL (remove the prefix like "data:image/jpeg;base64,")
       const base64Image = fileDataURL.split(",")[1];
       
       const response = await axios({
@@ -136,7 +129,6 @@ const Demo = () => {
         }
       });
 
-      // Process response into a format compatible with your AIResultsCard
       const processedResults = processApiResponse(response.data);
       setResults(processedResults);
     } catch (err) {
@@ -148,18 +140,16 @@ const Demo = () => {
   };
 
   const processApiResponse = (data: any) => {
-    // Check if predictions exist
     if (!data.predictions || data.predictions.length === 0) {
       return [];
     }
 
-    // Map the API response to the format expected by AIResultsCard
     return data.predictions.map((prediction: any) => {
       const className = prediction.class.toLowerCase();
       return {
         name: prediction.class,
         probability: prediction.confidence,
-        recyclable: recyclingGuidelines[className]?.recyclable ?? true // Default to true if unknown
+        recyclable: recyclingGuidelines[className]?.recyclable ?? true
       };
     });
   };
@@ -177,7 +167,6 @@ const Demo = () => {
     setResults(null);
     setError(null);
 
-    // For demo examples, we can use mock data (for demonstration purposes)
     setTimeout(() => {
       const mockPredictions = [
         { name: example.name, probability: 0.92, recyclable: true },
@@ -191,7 +180,6 @@ const Demo = () => {
 
   return (
     <Layout>
-      {/* Hero Section */}
       <div className="bg-gradient-to-br from-tech-800 to-tech-900 text-white py-16">
         <SectionContainer>
           <div className="max-w-3xl mx-auto text-center">
@@ -205,7 +193,6 @@ const Demo = () => {
         </SectionContainer>
       </div>
 
-      {/* Demo Section */}
       <SectionContainer className="py-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
@@ -215,7 +202,6 @@ const Demo = () => {
                 Upload an image of electronic waste for AI analysis. The system will identify components and provide recycling recommendations.
               </p>
 
-              {/* Custom Image Uploader */}
               <div 
                 className={`border-2 border-dashed rounded-lg p-6 text-center ${file ? 'border-tech-500 bg-tech-50' : 'border-gray-300 hover:border-tech-400'}`}
                 onDragOver={handleDragOver}
