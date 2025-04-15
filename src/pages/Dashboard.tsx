@@ -1,4 +1,3 @@
-
 import Layout from "@/components/Layout";
 import SectionContainer from "@/components/SectionContainer";
 import SectionHeader from "@/components/SectionHeader";
@@ -21,12 +20,10 @@ import {
   Calendar
 } from "lucide-react";
 
-// Mock data for charts
+// Updated mock data for charts with 2025 dates
 const monthlyRecyclingData = [
-  { name: 'Jan', Batteries: 40, 'Circuit Boards': 65, Plastics: 30, Displays: 25 },
-  { name: 'Feb', Batteries: 45, 'Circuit Boards': 70, Plastics: 35, Displays: 20 },
-  { name: 'Mar', Batteries: 50, 'Circuit Boards': 60, Plastics: 40, Displays: 30 },
-  { name: 'Apr', Batteries: 55, 'Circuit Boards': 75, Plastics: 45, Displays: 35 },
+  { name: 'Mar', Batteries: 40, 'Circuit Boards': 65, Plastics: 30, Displays: 25 },
+  { name: 'Apr', Batteries: 45, 'Circuit Boards': 70, Plastics: 35, Displays: 20 },
   { name: 'May', Batteries: 60, 'Circuit Boards': 85, Plastics: 50, Displays: 40 },
   { name: 'Jun', Batteries: 75, 'Circuit Boards': 90, Plastics: 55, Displays: 45 },
 ];
@@ -49,10 +46,8 @@ const processingEfficiencyData = [
 ];
 
 const recyclingGoalData = [
-  { name: 'Jan', Goal: 100, Actual: 80 },
-  { name: 'Feb', Goal: 100, Actual: 85 },
-  { name: 'Mar', Goal: 100, Actual: 90 },
-  { name: 'Apr', Goal: 100, Actual: 95 },
+  { name: 'Mar', Goal: 100, Actual: 80 },
+  { name: 'Apr', Goal: 100, Actual: 85 },
   { name: 'May', Goal: 100, Actual: 110 },
   { name: 'Jun', Goal: 100, Actual: 120 },
 ];
@@ -245,11 +240,11 @@ const Dashboard = () => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {[
-                  { date: "2023-06-15", batchId: "B-1234", type: "Mixed Electronics", weight: "78 kg", status: "Completed", recoveryRate: "92%" },
-                  { date: "2023-06-14", batchId: "B-1233", type: "Computers", weight: "125 kg", status: "Completed", recoveryRate: "88%" },
-                  { date: "2023-06-12", batchId: "B-1232", type: "Mobile Devices", weight: "45 kg", status: "Completed", recoveryRate: "95%" },
-                  { date: "2023-06-10", batchId: "B-1231", type: "Printers", weight: "112 kg", status: "Completed", recoveryRate: "82%" },
-                  { date: "2023-06-08", batchId: "B-1230", type: "Circuit Boards", weight: "56 kg", status: "Completed", recoveryRate: "97%" },
+                  { date: "2025-03-15", batchId: "B-1234", type: "Mixed Electronics", weight: "78 kg", status: "Completed", recoveryRate: "92%" },
+                  { date: "2025-03-14", batchId: "B-1233", type: "Computers", weight: "125 kg", status: "Completed", recoveryRate: "88%" },
+                  { date: "2025-04-12", batchId: "B-1232", type: "Mobile Devices", weight: "45 kg", status: "Completed", recoveryRate: "95%" },
+                  { date: "2025-04-10", batchId: "B-1231", type: "Printers", weight: "112 kg", status: "Completed", recoveryRate: "82%" },
+                  { date: "2025-04-08", batchId: "B-1230", type: "Circuit Boards", weight: "56 kg", status: "Completed", recoveryRate: "97%" },
                 ].map((item, index) => (
                   <tr key={index}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.date}</td>
